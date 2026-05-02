@@ -6,8 +6,8 @@ import { useAuth } from "@/lib/auth";
 import tcLogo from "@/assets/tc-logo.png";
 
 export default function AdminLoginPage() {
-  const [email, setEmail] = useState("tc.sac@kitsw.ac.in");
-  const [password, setPassword] = useState("tc@123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -48,7 +48,7 @@ export default function AdminLoginPage() {
               <label className="mb-2 block font-display text-[10px] tracking-widest text-muted-foreground">EMAIL ADDRESS</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="admin@kitsw.ac.in"
+                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
                   className="w-full rounded-lg border border-border bg-secondary py-3 pl-10 pr-4 text-sm focus:border-accent/60 focus:outline-none focus:ring-1 focus:ring-accent/30" />
               </div>
             </div>
@@ -57,7 +57,7 @@ export default function AdminLoginPage() {
               <label className="mb-2 block font-display text-[10px] tracking-widest text-muted-foreground">PASSWORD</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <input type={showPw ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} required placeholder="••••••••"
+                <input type={showPw ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} required
                   className="w-full rounded-lg border border-border bg-secondary py-3 pl-10 pr-10 text-sm focus:border-accent/60 focus:outline-none focus:ring-1 focus:ring-accent/30" />
                 <button type="button" onClick={() => setShowPw(s => !s)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                   {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
