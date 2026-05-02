@@ -1,5 +1,8 @@
 // Centralized API client for the Technical Club backend
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+let API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+if (!API_BASE.endsWith('/api')) {
+  API_BASE = API_BASE.endsWith('/') ? `${API_BASE}api` : `${API_BASE}/api`;
+}
 
 const getToken = () => localStorage.getItem('tc_admin_token');
 
