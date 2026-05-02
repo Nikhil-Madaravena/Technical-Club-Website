@@ -78,9 +78,6 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          <p className="mt-6 text-center text-xs text-muted-foreground">
-            Default: <code className="rounded bg-secondary px-1.5 py-0.5 text-[10px]">tc.sac@kitsw.ac.in</code> / <code className="rounded bg-secondary px-1.5 py-0.5 text-[10px]">tc@123</code>
-          </p>
         </div>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
