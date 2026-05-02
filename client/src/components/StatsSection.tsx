@@ -1,12 +1,6 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
-
-const stats = [
-  { value: 500, suffix: "+", label: "ACTIVE MEMBERS" },
-  { value: 50, suffix: "+", label: "EVENTS CONDUCTED" },
-  { value: 20, suffix: "+", label: "WORKSHOPS" },
-  { value: 10, suffix: "+", label: "HACKATHON WINS" },
-];
+import { api } from "@/lib/api";
 
 const Counter = ({ target, suffix }: { target: number; suffix: string }) => {
   const [count, setCount] = useState(0);
@@ -14,7 +8,7 @@ const Counter = ({ target, suffix }: { target: number; suffix: string }) => {
   const isInView = useInView(ref, { once: true });
 
   useEffect(() => {
-    if (!isInView) return;
+    if (!isInView || target === 0) return;
     let start = 0;
     const duration = 2000;
     const step = target / (duration / 16);
@@ -38,6 +32,29 @@ const Counter = ({ target, suffix }: { target: number; suffix: string }) => {
 };
 
 const StatsSection = () => {
+  const [stats, setStats] = useState([
+    { value: 0, suffix: "+", label: "ACTIVE MEMBERS" },
+    { value: 0, suffix: "+", label: "EVENTS CONDUCTED" },
+    { value: 0, suffix: "+", label: "WORKSHOPS" },
+    { value: 0, suffix: "+", label: "INNOVATIVE PROJECTS" },
+  ]);
+
+  useEffect(() => {
+    api.stats.getPublic()
+      .then(res => {
+        if (res.success && res.data) {
+          const d = res.data;
+          setStats([
+            { value: d.members || 500, suffix: "+", label: "ACTIVE MEMBERS" },
+            { value: d.events || 50, suffix: "+", label: "EVENTS CONDUCTED" },
+            { value: d.workshops || 20, suffix: "+", label: "WORKSHOPS" },
+            { value: 15, suffix: "+", label: "INNOVATIVE PROJECTS" },
+          ]);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <section className="relative py-24">
       <div className="section-line" />
