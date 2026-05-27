@@ -12,6 +12,7 @@ import JoinPage from "./pages/JoinUs";
 import AdminLoginPage from "./pages/AdminLogin";
 import DashboardPage from "./pages/Dashboard";
 import ContactPage from "./pages/Contact";
+import SumshodiniPage from "./pages/Sumshodini";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/gallery" element={<GalleryPage />} />
             <Route path="/events" element={<EventsPage />} />
+            <Route path="/sumshodini" element={<SumshodiniPage/>} />
             <Route path="/join" element={<JoinPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/admin" element={<AdminLoginPage />} />

@@ -10,13 +10,17 @@ const eventSchema = new mongoose.Schema(
     location: { type: String, required: true },
     category: {
       type: String,
-      enum: ['Hackathon', 'Workshop', 'Guest Lecture', 'Competition', 'Seminar', 'Other'],
+      enum: ['Hackathon', 'Workshop', 'Guest Lecture', 'Competition', 'Seminar', 'Sumshodini', 'Other'],
       default: 'Other',
     },
     status: {
       type: String,
       enum: ['upcoming', 'ongoing', 'completed', 'cancelled'],
       default: 'upcoming',
+    },
+    organizedBy:{
+      type:String,
+      default: 'Technical Club',
     },
     coverImage: { type: String, default: '' },
     images: [{ type: String }],

@@ -6,7 +6,8 @@ import {
   LogOut, Menu, X, Plus, Trash2, Edit, Check, AlertCircle,
   TrendingUp, Image, Mail, ChevronRight, Tag, Folder, MoreVertical, Settings,
   ArrowLeft, CheckCircle, Search, Grid, FileText, FileDown, Download, Filter, UserPlus,
-  Clock, ClipboardList, XCircle, MoreHorizontal, Save
+  Clock, ClipboardList, XCircle, MoreHorizontal, Save,
+  ChevronDown,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
@@ -120,21 +121,23 @@ function OverviewPanel() {
 }
 
 // ─── Events Panel ─────────────────────────────────────────────────────────────
-const CATEGORIES = ["Hackathon","Workshop","Guest Lecture","Competition","Seminar","Other"];
+const CATEGORIES = ["Hackathon","Workshop","Guest Lecture","Competition","Seminar", "Sumshodini", "Other"];
 const STATUSES   = ["upcoming","ongoing","completed","cancelled"];
 
 function EventsPanel() {
   const [events, setEvents] = useState<any[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<any>(null);
-  const [form, setForm] = useState<any>({ title:"", description:"", date:"", location:"", category:"Workshop", status:"upcoming", registrationLink:"" });
+  const [form, setForm] = useState<any>({ title:"", description:"", date:"", location:"", category:"Workshop", status:"upcoming", organizedBy:"TC Club", registrationLink:"" });
   const [msg, setMsg] = useState("");
+  const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState("latest");
 
   const load = () => api.events.getAll({ limit:"50" }).then(r => setEvents(r.data || [])).catch(() => {});
   useEffect(() => { load(); }, []);
 
-  const openNew  = () => { setEditing(null); setForm({ title:"", description:"", date:"", location:"", category:"Workshop", status:"upcoming", registrationLink:"" }); setShowForm(true); };
-  const openEdit = (ev: any) => { setEditing(ev); setForm({ title: ev.title, description: ev.description, date: ev.date?.slice(0,10), location: ev.location, category: ev.category, status: ev.status, registrationLink: ev.registrationLink || "" }); setShowForm(true); };
+  const openNew  = () => { setEditing(null); setForm({ title:"", description:"", date:"", location:"", category:"Workshop", status:"upcoming", organizedBy:"", registrationLink:"" }); setShowForm(true); };
+  const openEdit = (ev: any) => { setEditing(ev); setForm({ title: ev.title, description: ev.description, date: ev.date?.slice(0,10), location: ev.location, category: ev.category, status: ev.status, organizedBy: ev.organizedBy ,registrationLink: ev.registrationLink || "" }); setShowForm(true); };
 
   const save = async () => {
     const fd = new FormData();
@@ -151,6 +154,22 @@ function EventsPanel() {
     await api.events.delete(id); load();
   };
 
+  const filteredEvents = events
+  .filter((event) =>
+    event.title.toLowerCase().includes(search.toLowerCase())
+  )
+  .sort((a, b) => {
+    if (sortBy === "latest") {
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    }
+
+    if (sortBy === "oldest") {
+      return new Date(a.date).getTime() - new Date(b.date).getTime();
+    }
+
+    return 0;
+  });
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -159,11 +178,28 @@ function EventsPanel() {
       </div>
       {msg && <p className="rounded-lg bg-accent/10 px-4 py-2 text-xs text-accent">{msg}</p>}
 
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative w-full sm:max-w-sm">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+
+          <input  type="text" placeholder="Search events..." value={search} onChange={(e) => setSearch(e.target.value)}   className="w-full rounded-lg border border-border bg-card py-2 pl-10 pr-4 text-sm outline-none focus:border-accent"/>
+         </div>
+         <div className="relative">
+          <ChevronDown className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+
+          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}className="rounded-lg border border-border bg-card px-4 py-2 pr-10 text-sm outline-none">
+            <option value="latest">Latest</option>
+            <option value="oldest">Oldest</option>
+          </select>
+          </div>
+      </div>
+
+
       {showForm && (
         <div className="rounded-xl border border-border bg-card p-6 space-y-4">
           <h3 className="font-display text-xs font-bold tracking-wider">{editing ? "EDIT EVENT" : "NEW EVENT"}</h3>
           <div className="grid gap-4 sm:grid-cols-2">
-            {[["title","Title"],["location","Location"]].map(([k,l]) => (
+            {[["title","Title"],["location","Location"],["organizedBy","Organized By"]].map(([k,l]) => (
               <div key={k}><label className="mb-1 block font-display text-[9px] tracking-widest text-muted-foreground">{l}</label>
                 <input value={form[k]} onChange={e => setForm((f:any) => ({...f,[k]:e.target.value}))} className="w-full rounded-lg border border-border bg-secondary px-3 py-2 text-sm focus:border-accent/50 focus:outline-none" /></div>
             ))}
@@ -188,11 +224,11 @@ function EventsPanel() {
       )}
 
       <div className="space-y-2">
-        {events.map(ev => (
+        {filteredEvents.map(ev => (
           <div key={ev._id} className="flex items-center gap-4 rounded-xl border border-border bg-card p-4">
             <div className="flex-1 min-w-0">
               <p className="font-display text-xs font-bold tracking-wide truncate">{ev.title}</p>
-              <p className="text-[10px] text-muted-foreground">{ev.category} · {new Date(ev.date).toLocaleDateString()} · <span className="capitalize">{ev.status}</span></p>
+              <p className="text-[10px] text-muted-foreground">{ev.category} · {new Date(ev.date).toLocaleDateString()} · <span className="capitalize">{ev.status}</span>{ev.organizedBy && ` · ${ev.organizedBy}`}</p>
             </div>
             <div className="flex gap-2">
               <button onClick={() => openEdit(ev)} className="rounded-lg border border-border p-2 text-muted-foreground hover:text-foreground"><Edit className="h-3.5 w-3.5" /></button>

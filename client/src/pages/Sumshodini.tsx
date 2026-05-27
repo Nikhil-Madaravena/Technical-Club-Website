@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Calendar, MapPin, Users, Search, Filter, Trophy, ArrowRight, Clock, CheckCircle2, ChevronDown } from "lucide-react";
+import { Calendar, MapPin, Users, Search, Trophy, ArrowRight, Clock, CheckCircle2, ChevronDown } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import FooterSection from "@/components/FooterSection";
+import { api } from "@/lib/api";
 
-const CATEGORIES = ["All", "Hackathon", "Workshop", "Guest Lecture", "Competition", "Seminar"];
+
 const STATUSES = ["All", "upcoming", "completed"];
+
 
 const FALLBACK_EVENTS = [
   {
@@ -98,6 +100,7 @@ const FALLBACK_EVENTS = [
   }
 ];
 
+
 const statusConfig: Record<string, { label: string; color: string; Icon: any }> = {
   upcoming: { label: "UPCOMING", color: "text-accent bg-accent/10", Icon: Clock },
   ongoing:  { label: "ONGOING",  color: "text-green-400 bg-green-400/10", Icon: Clock },
@@ -117,12 +120,13 @@ function EventCard({ event: ev, i, expanded, setExpanded }: any) {
           <div className="mb-2 flex flex-wrap items-center gap-2">
             <span className={`flex items-center gap-1 rounded-full px-2.5 py-0.5 font-display text-[9px] tracking-wider ${cfg.color}`}><cfg.Icon className="h-2.5 w-2.5" />{cfg.label}</span>
             <span className="rounded-full bg-secondary px-2.5 py-0.5 font-display text-[9px] tracking-wider text-muted-foreground">{ev.category}</span>
+            {ev.organizedBy && (<span className="rounded-full border border-accent/30 bg-accent/10 px-2 py-0.5 text-[9px] text-accent">{ev.organizedBy}</span>)}
             {ev.tags?.slice(0, 2).map((t: string) => <span key={t} className="rounded-full border border-border px-2 py-0.5 text-[9px] text-muted-foreground">{t}</span>)}
-             {ev.organizedBy && (
-              <span className="rounded-full border border-accent/30 bg-accent/10 px-2 py-0.5 text-[9px] text-accent">Organized by {ev.organizedBy}</span>
-            )}
           </div>
           <h3 className="mb-1 font-display text-sm font-bold tracking-wider">{ev.title}</h3>
+          {ev.organizedBy && (
+            <p className="mb-2 text-[11px] uppercase tracking-[] text-white">Organized by {ev.organizedBy}</p>
+          )}
           <p className="mb-3 text-xs text-muted-foreground line-clamp-2">{ev.shortDescription || ev.description}</p>
           <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
             <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{new Date(ev.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
@@ -176,22 +180,28 @@ function EventCard({ event: ev, i, expanded, setExpanded }: any) {
   );
 }
 
-export default function EventsPage() {
+export default function SumshodiniPage() {
   const [events, setEvents] = useState<any[]>(FALLBACK_EVENTS);
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
   const [status, setStatus] = useState("All");
   const [expanded, setExpanded] = useState<string | null>(null);
 
   useEffect(() => {
-    // api.events.getAll({ limit: "50" }).then(res => { if (res.data?.length) setEvents(res.data); }).catch(() => {});
+    api.events.getSumshodini().then(
+        res=>{
+                setEvents(res.data);
+        }
+    )
+    .catch(()=>{})
   }, []);
 
-  const filtered = events.filter(ev => {
+  const sumshodiniEvents = events.filter(
+    ev => ev.category === "Sumshodini"
+    );
+  const filtered = sumshodiniEvents.filter(ev => {
     const matchSearch = ev.title.toLowerCase().includes(search.toLowerCase()) || (ev.shortDescription || "").toLowerCase().includes(search.toLowerCase());
-    const matchCat = category === "All" || ev.category === category;
     const matchSt = status === "All" || ev.status === status;
-    return matchSearch && matchCat && matchSt;
+    return matchSearch && matchSt;
   });
 
   const upcoming = filtered.filter(e => e.status === "upcoming" || e.status === "ongoing");
@@ -204,8 +214,8 @@ export default function EventsPage() {
         <div className="absolute inset-0 bg-grid-pattern" />
         <div className="absolute inset-0 bg-radial-glow" />
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="relative z-10 text-center">
-          <span className="mb-4 inline-block font-display text-[10px] tracking-[0.5em] text-accent">ALL ACTIVITIES</span>
-          <h1 className="font-display text-5xl font-black tracking-wide sm:text-7xl">EVENTS <span className="text-gradient-brand">ARCHIVE</span></h1>
+          <span className="mb-4 inline-block font-display text-[10px] tracking-[0.5em] text-accent"></span>
+          <h1 className="font-display text-5xl font-black tracking-wide sm:text-7xl"> <span className="text-gradient-brand">SUMSHODINI</span></h1>
           <p className="mt-4 text-muted-foreground">Every workshop, hackathon, and talk — all in one place</p>
         </motion.div>
       </section>
@@ -219,12 +229,6 @@ export default function EventsPage() {
                 className="w-full rounded-lg border border-border bg-secondary py-2 pl-9 pr-4 text-sm focus:border-accent/50 focus:outline-none" />
             </div>
             <div className="flex gap-2 overflow-x-auto">
-              <div className="flex items-center gap-1.5 rounded-lg border border-border bg-secondary px-3 py-2">
-                <Filter className="h-3.5 w-3.5 text-muted-foreground" />
-                <select value={category} onChange={e => setCategory(e.target.value)} className="bg-transparent text-xs focus:outline-none">
-                  {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
               <div className="flex gap-1">
                 {STATUSES.map(s => (
                   <button key={s} onClick={() => setStatus(s)}
@@ -257,7 +261,7 @@ export default function EventsPage() {
             <div className="space-y-4">{past.map((ev, i) => <EventCard key={ev._id} event={ev} i={i} expanded={expanded} setExpanded={setExpanded} />)}</div>
           </div>
         )}
-        {filtered.length === 0 && <div className="py-20 text-center text-muted-foreground">No events found matching your filters.</div>}
+        {filtered.length === 0 && <div className="py-20 text-center text-muted-foreground">No Sumshodini events found.</div>}
       </div>
       <FooterSection />
     </div>

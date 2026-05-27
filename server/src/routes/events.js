@@ -45,6 +45,20 @@ router.get('/upcoming', async (req, res) => {
   }
 });
 
+//GET /api/events/sumshodini - public
+router.get('/sumshodini', async (req,res)=>{
+  try {
+    const events = await Event.find({ category : 'Sumshodini' })
+      .sort({ date : 1 });
+    res.json({ success: true, data: events});
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+
 // GET /api/events/:id — public
 router.get('/:id', async (req, res) => {
   try {

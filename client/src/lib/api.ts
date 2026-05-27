@@ -46,6 +46,7 @@ export const api = {
       return request<{ success: boolean; data: any[]; total: number }>(`/events${q}`);
     },
     getUpcoming: () => request<{ success: boolean; data: any[] }>('/events/upcoming'),
+    getSumshodini: () => request<{ success: boolean; data: any[] }>('/events/sumshodini'),
     getById: (id: string) => request<{ success: boolean; data: any }>(`/events/${id}`),
     create: (formData: FormData) =>
       fetch(`${API_BASE}/events`, {

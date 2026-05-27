@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Calendar, MapPin, ArrowRight, Code2, Wrench, Mic, Trophy } from "lucide-react";
+import { Calendar, MapPin, User, ArrowRight, Code2, Wrench, Mic, Trophy } from "lucide-react";
 
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
@@ -9,6 +9,7 @@ const categoryIcons: Record<string, any> = {
   "Workshop": Wrench,
   "Guest Lecture": Mic,
   "Competition": Trophy,
+  "Sumshodini": Code2,
 };
 
 const EventsSection = () => {
@@ -82,6 +83,12 @@ const EventsSection = () => {
                     <span className="flex items-center gap-1">
                       <MapPin className="h-3 w-3" /> {event.location}
                     </span>
+                    {event.organizedBy && (
+                        <span className="flex items-center gap-1">
+                          <User className="h-3 w-3" />
+                            {event.organizedBy}
+                        </span>
+                      )}
                   </div>
                 </div>
               </div>

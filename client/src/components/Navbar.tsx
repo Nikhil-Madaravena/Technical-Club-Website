@@ -8,6 +8,7 @@ const NAV_LINKS = [
   { label: "Home",         href: "/" },
   { label: "Events",       href: "/events" },
   { label: "Gallery",      href: "/gallery" },
+  { label: "Sumshodini",   href: "/sumshodini" },
   { label: "Join Us",      href: "/join" },
   { label: "Contact",      href: "/contact" },
 ];
@@ -28,6 +29,7 @@ const Navbar = () => {
         { label: "About",        href: "#about" },
         { label: "Events",       href: "/events" },
         { label: "Gallery",      href: "/gallery" },
+        { label: "Sumshodini",   href: "/sumshodini" },
         { label: "Team",         href: "#team" },
         { label: "Join Us",      href: "/join" },
         { label: "Contact",      href: "/contact" },
