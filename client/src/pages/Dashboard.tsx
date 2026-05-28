@@ -253,6 +253,7 @@ function GalleryPanel() {
   const [editingAlbum, setEditingAlbum] = useState<any>(null);
   const [editingPhoto, setEditingPhoto] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [albumFilter, setAlbumFilter] = useState("All");
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
   
   // Batch Metadata
@@ -369,49 +370,133 @@ function GalleryPanel() {
     loadAlbums();
   };
 
-  const filteredImages = images.filter(img => 
-    !searchQuery || 
-    (img.caption || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (img.tags || []).some((t: string) => t.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const filteredImages = images.filter(img => {
+  const matchesSearch =
+    !searchQuery ||
+    (img.caption || "")
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase()) ||
+    (img.tags || []).some((t: string) =>
+      t.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+  const matchesAlbum =
+    albumFilter === "All" ||
+    img.album === albumFilter;
+
+  return matchesSearch && matchesAlbum;
+});
+
+  const allAlbumNames = [
+  "All",
+  ...new Set(images.map(img => img.album).filter(Boolean))
+];
 
   return (
     <div className="space-y-6">
       {/* Header & Controls */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          {selectedAlbum && (
-            <button onClick={() => setSelectedAlbum(null)} className="rounded-full border border-border p-1.5 text-muted-foreground hover:bg-secondary transition-all">
-              <ArrowLeft className="h-4 w-4" />
-            </button>
-          )}
-          <h2 className="font-display text-sm font-bold tracking-wider uppercase">
-            {selectedAlbum ? `ALBUM: ${selectedAlbum}` : "Gallery Manager"}
-          </h2>
-          {!selectedAlbum && (
-            <div className="flex rounded-lg border border-border bg-secondary/50 p-1">
-              <button onClick={() => setViewMode("photos")} className={`flex items-center gap-1.5 px-3 py-1 font-display text-[9px] tracking-widest transition-all ${viewMode === "photos" ? "bg-background text-accent shadow-sm" : "text-muted-foreground"}`}><Grid className="h-3 w-3" /> PHOTOS</button>
-              <button onClick={() => setViewMode("albums")} className={`flex items-center gap-1.5 px-3 py-1 font-display text-[9px] tracking-widest transition-all ${viewMode === "albums" ? "bg-background text-accent shadow-sm" : "text-muted-foreground"}`}><Folder className="h-3 w-3" /> ALBUMS</button>
-            </div>
-          )}
-        </div>
+      <div className="sticky top-0 z-20 rounded-xl border border-border bg-background/95 p-4 backdrop-blur">
+  <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
 
-        <div className="flex items-center gap-3">
-          <div className="relative group">
-            <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-accent" />
-            <input 
-              value={searchQuery} 
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Filter photos..." 
-              className="rounded-lg border border-border bg-secondary px-9 py-2 text-[10px] focus:outline-none w-48" 
-            />
-          </div>
-          <label className="flex cursor-pointer items-center gap-2 rounded-lg bg-accent px-4 py-2 font-display text-[10px] tracking-widest text-background hover:bg-accent/90 transition-all">
-            <Plus className="h-3.5 w-3.5" />SELECT PHOTOS
-            <input type="file" accept="image/*" multiple className="hidden" onChange={onFileChange} disabled={uploading} />
-          </label>
+    {/* Left Side */}
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+
+      {/* Back Button */}
+      {selectedAlbum && (
+        <button
+          onClick={() => setSelectedAlbum(null)}
+          className="flex items-center gap-2 rounded-lg border border-border bg-secondary px-3 py-2 text-xs text-muted-foreground transition-all hover:border-accent/40 hover:text-foreground"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          BACK
+        </button>
+      )}
+
+      {/* Title */}
+      <h2 className="font-display text-sm font-bold tracking-wider uppercase">
+        {selectedAlbum
+          ? `ALBUM: ${selectedAlbum}`
+          : "Gallery Manager"}
+      </h2>
+
+      {/* View Switch */}
+      {!selectedAlbum && (
+        <div className="flex gap-1">
+          <button
+            onClick={() => setViewMode("photos")}
+            className={`rounded-lg px-3 py-2 font-display text-[10px] tracking-widest transition-all ${
+              viewMode === "photos"
+                ? "bg-accent text-background"
+                : "border border-border text-muted-foreground"
+            }`}
+          >
+            PHOTOS
+          </button>
+
+          <button
+            onClick={() => setViewMode("albums")}
+            className={`rounded-lg px-3 py-2 font-display text-[10px] tracking-widest transition-all ${
+              viewMode === "albums"
+                ? "bg-accent text-background"
+                : "border border-border text-muted-foreground"
+            }`}
+          >
+            ALBUMS
+          </button>
         </div>
-      </div>
+      )}
+    </div>
+
+    {/* Right Side */}
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+
+  {/* Search */}
+  <div className="relative flex-1 sm:w-80">
+    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+
+    <input
+      value={searchQuery}
+      onChange={e => setSearchQuery(e.target.value)}
+      placeholder="Search photos..."
+      className="w-full rounded-lg border border-border bg-secondary py-2 pl-9 pr-4 text-sm focus:border-accent/50 focus:outline-none"
+    />
+  </div>
+
+  {/* Album Filter */}
+  <div className="flex items-center gap-1.5 rounded-lg border border-border bg-secondary px-3 py-2">
+    <Filter className="h-3.5 w-3.5 text-muted-foreground" />
+
+    <select
+      value={albumFilter}
+      onChange={(e) => setAlbumFilter(e.target.value)}
+      className="bg-transparent text-xs focus:outline-none"
+    >
+      {allAlbumNames.map((album) => (
+        <option key={album} value={album}>
+          {album}
+        </option>
+      ))}
+    </select>
+  </div>
+
+  {/* Upload Button */}
+  <label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2 font-display text-[10px] tracking-widest text-background transition-all hover:opacity-90">
+    <Plus className="h-3.5 w-3.5" />
+
+    SELECT PHOTOS
+
+    <input
+      type="file"
+      accept="image/*"
+      multiple
+      className="hidden"
+      onChange={onFileChange}
+      disabled={uploading}
+    />
+  </label>
+</div>
+  </div>
+</div>
 
       {/* Upload Preview Section */}
       {previews.length > 0 && (

@@ -99,77 +99,88 @@ export default function GalleryPage() {
       </section>
 
       {/* Controls */}
-      <div className="sticky top-16 z-30 border-b border-border bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto max-w-7xl px-6 py-6">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-            {/* Search & Tabs */}
-            <div className="flex flex-1 flex-col gap-4 sm:flex-row sm:items-center">
-              <div className="relative group w-full sm:w-64">
-                <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-accent" />
-                <input 
-                  type="text" 
-                  placeholder="Search memories..." 
-                  value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
-                  className="w-full rounded-full border border-border bg-secondary/50 py-2 pl-9 pr-4 text-xs focus:border-accent/50 focus:outline-none transition-all"
-                />
-              </div>
-              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
-                {allYears.map(year => (
-                  <button
-                    key={year}
-                    onClick={() => setActiveYear(year)}
-                    className={`shrink-0 rounded-full px-4 py-1.5 font-display text-[9px] tracking-widest transition-all ${
-                      activeYear === year
-                        ? "bg-accent text-background shadow-lg shadow-accent/20"
-                        : "border border-border text-muted-foreground hover:border-accent/50"
-                    }`}
-                  >
-                    {year}
-                  </button>
-                ))}
-              </div>
-            </div>
+      <div className="sticky top-16 z-20 border-b border-border bg-background/95 backdrop-blur">
+  <div className="mx-auto max-w-6xl px-6 py-4">
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+      
+      {/* Search */}
+      <div className="relative flex-1">
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
-            {/* View Switching */}
-            <div className="flex items-center gap-4">
-               <div className="flex rounded-full border border-border bg-secondary/30 p-1">
-                <button
-                  onClick={() => setView("grid")}
-                  className={`flex items-center gap-2 rounded-full px-4 py-1.5 text-[10px] font-bold tracking-widest transition-all ${view === "grid" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"}`}
-                >
-                  <Images className="h-3 w-3" /> GRID
-                </button>
-                <button
-                  onClick={() => setView("albums")}
-                  className={`flex items-center gap-2 rounded-full px-4 py-1.5 text-[10px] font-bold tracking-widest transition-all ${view === "albums" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"}`}
-                >
-                  <Calendar className="h-3 w-3" /> ALBUMS
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          {view === "grid" && (
-            <div className="mt-6 flex items-center gap-2 overflow-x-auto no-scrollbar border-t border-border/50 pt-4">
-              <Filter className="h-3 w-3 shrink-0 text-muted-foreground" />
-              {allAlbumNames.map(name => (
-                <button
-                  key={name}
-                  onClick={() => setActiveAlbum(name)}
-                  className={`shrink-0 rounded-full px-3 py-1 font-display text-[9px] tracking-widest transition-all ${
-                    activeAlbum === name
-                      ? "text-accent"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {name.toUpperCase()}
-                </button>
-              ))}
-            </div>
-          )}
+        <input
+          type="text"
+          placeholder="Search gallery..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full rounded-lg border border-border bg-secondary py-2 pl-9 pr-4 text-sm focus:border-accent/50 focus:outline-none"
+        />
+      </div>
+
+      {/* Filters */}
+      <div className="flex gap-2 overflow-x-auto">
+
+        {/* Year Filter */}
+        <div className="flex items-center gap-1.5 rounded-lg border border-border bg-secondary px-3 py-2">
+          <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
+
+          <select
+            value={activeYear}
+            onChange={(e) => setActiveYear(e.target.value)}
+            className="bg-transparent text-xs focus:outline-none"
+          >
+            {allYears.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Album Filter */}
+        <div className="flex items-center gap-1.5 rounded-lg border border-border bg-secondary px-3 py-2">
+          <Filter className="h-3.5 w-3.5 text-muted-foreground" />
+
+          <select
+            value={activeAlbum}
+            onChange={(e) => setActiveAlbum(e.target.value)}
+            className="bg-transparent text-xs focus:outline-none"
+          >
+            {allAlbumNames.map((album) => (
+              <option key={album} value={album}>
+                {album}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* View Switch */}
+        <div className="flex gap-1">
+          <button
+            onClick={() => setView("grid")}
+            className={`rounded-lg px-3 py-2 font-display text-[10px] tracking-widest transition-all ${
+              view === "grid"
+                ? "bg-accent text-background"
+                : "border border-border text-muted-foreground"
+            }`}
+          >
+            GRID
+          </button>
+
+          <button
+            onClick={() => setView("albums")}
+            className={`rounded-lg px-3 py-2 font-display text-[10px] tracking-widest transition-all ${
+              view === "albums"
+                ? "bg-accent text-background"
+                : "border border-border text-muted-foreground"
+            }`}
+          >
+            ALBUMS
+          </button>
         </div>
       </div>
+    </div>
+  </div>
+</div>
 
       <div className="mx-auto max-w-7xl px-6 py-12">
         {/* Albums view */}
