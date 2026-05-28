@@ -187,16 +187,19 @@ export default function SumshodiniPage() {
   const [expanded, setExpanded] = useState<string | null>(null);
 
   useEffect(() => {
-    api.events.getSumshodini().then(
-        res=>{
-                setEvents(res.data);
+    api.events.getSumshodini()
+      .then(res => {
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          setEvents(res.data);
         }
-    )
-    .catch(()=>{})
+      })
+      .catch(() => {});
   }, []);
 
   const sumshodiniEvents = events.filter(
-    ev => ev.category === "Sumshodini"
+    ev =>
+    ev.category?.toLowerCase() === "sumshodini" ||
+    ev.category?.toLowerCase() === "samsodini"
     );
   const filtered = sumshodiniEvents.filter(ev => {
     const matchSearch = ev.title.toLowerCase().includes(search.toLowerCase()) || (ev.shortDescription || "").toLowerCase().includes(search.toLowerCase());
