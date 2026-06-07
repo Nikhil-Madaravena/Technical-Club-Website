@@ -178,13 +178,9 @@ export default function SumshodiniPage() {
     useState<any | null>(null);
 
   useEffect(() => {
-    api.events
-      .getSumshodini()
-      .then((res) => {
-        if (
-          Array.isArray(res.data) &&
-          res.data.length > 0
-        ) {
+    api.events.getSumshodini()
+      .then(res => {
+        if (Array.isArray(res.data) && res.data.length > 0) {
           setEvents(res.data);
         }
       })
@@ -204,26 +200,15 @@ export default function SumshodiniPage() {
   }, [selectedEvent]);
 
   const sumshodiniEvents = events.filter(
-    (ev) =>
-      ev.category?.toLowerCase() ===
-        "sumshodini" ||
-      ev.category?.toLowerCase() ===
-        "samsodini"
-  );
-
-  const filtered = sumshodiniEvents.filter(
-    (ev) => {
-      const matchSearch =
-        ev.title
-          .toLowerCase()
-          .includes(search.toLowerCase()) ||
-        (ev.shortDescription || "")
-          .toLowerCase()
-          .includes(search.toLowerCase());
-
-      const matchSt =
-        status === "All" ||
-        ev.status === status;
+    ev =>
+    ev.category?.toLowerCase() === "sumshodini" ||
+    ev.category?.toLowerCase() === "samsodini"
+    );
+  const filtered = sumshodiniEvents.filter(ev => {
+    const matchSearch = ev.title.toLowerCase().includes(search.toLowerCase()) || (ev.shortDescription || "").toLowerCase().includes(search.toLowerCase());
+    const matchSt = status === "All" || ev.status === status;
+    return matchSearch && matchSt;
+  });
 
       return matchSearch && matchSt;
     }
