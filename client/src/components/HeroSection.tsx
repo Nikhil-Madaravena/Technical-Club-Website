@@ -1,13 +1,19 @@
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import tcLogo from "@/assets/tc-logo.png";
+import { GLSLHills } from "@/components/ui/glsl-hills";
 
 const HeroSection = () => {
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background">
       {/* Grid background */}
-      <div className="absolute inset-0 bg-grid-pattern" />
+      <div className="absolute inset-0 bg-grid-pattern opacity-40" />
       <div className="absolute inset-0 bg-radial-glow" />
+
+      {/* 3D Hills Background */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-50 md:opacity-75">
+        <GLSLHills width="100%" height="100%" cameraZ={130} planeSize={220} speed={0.3} />
+      </div>
 
       {/* Geometric accent lines */}
       <motion.div

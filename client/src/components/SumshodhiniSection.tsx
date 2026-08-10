@@ -12,6 +12,8 @@ const highlights = [
   { icon: Mic, label: "Tech Talks", desc: "Keynotes and panels from industry leaders and alumni" },
 ];
 
+import { AsciiArt } from "@/components/ui/neon-nebula";
+
 const SumshodhiniSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -19,6 +21,11 @@ const SumshodhiniSection = () => {
   return (
     <section id="sumshodhini" className="relative py-32 overflow-hidden" ref={ref}>
       <div className="section-line" />
+
+      {/* Background Neon Nebula ASCII Art */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-25 mix-blend-screen">
+        <AsciiArt className="h-full w-full" />
+      </div>
 
       {/* Background glow */}
       <div className="pointer-events-none absolute inset-0 bg-radial-glow opacity-60" />
