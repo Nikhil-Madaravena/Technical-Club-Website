@@ -7,7 +7,7 @@ const contactSchema = new mongoose.Schema(
     subject: { type: String, required: true },
     message: { type: String, required: true },
     type: { type: String, enum: ['general', 'membership', 'collaboration', 'contact', 'other'], default: 'general' },
-    status: { type: String, enum: ['pending', 'reviewing', 'shortlisted', 'accepted', 'rejected'], default: 'pending' },
+    status: { type: String, enum: ['new', 'read', 'pending', 'reviewing', 'shortlisted', 'accepted', 'rejected'], default: 'new' },
     notes: { type: String, default: '' }, // Admin notes
     resumeUrl: { type: String, default: '' }, // for membership requests
   },

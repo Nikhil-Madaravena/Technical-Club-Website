@@ -17,7 +17,7 @@ let storage;
 if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET) {
   const cloudinary = require('cloudinary').v2;
   const { CloudinaryStorage } = require('multer-storage-cloudinary');
-  
+
   cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -28,7 +28,8 @@ if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && proce
     cloudinary: cloudinary,
     params: {
       folder: 'tc-website',
-      allowed_formats: ['jpg', 'png', 'jpeg', 'gif', 'webp', 'pdf', 'docx']
+      allowed_formats: ['jpg', 'png', 'jpeg', 'gif', 'webp', 'pdf', 'docx'],
+      transformation: [{ width: 1920, height: 1080, crop: 'limit', quality: 'auto:good' }] // Auto-compress on upload
     }
   });
 } else if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY && process.env.FIREBASE_STORAGE_BUCKET) {
@@ -46,6 +47,6 @@ if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && proce
   });
 }
 
-const upload = multer({ storage, fileFilter, limits: { fileSize: 5 * 1024 * 1024 } });
+const upload = multer({ storage, fileFilter, limits: { fileSize: 50 * 1024 * 1024 } });
 
 module.exports = upload;

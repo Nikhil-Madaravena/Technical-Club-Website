@@ -31,7 +31,7 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const uploadDocument = multer({ storage, fileFilter, limits: { fileSize: 10 * 1024 * 1024 } }); // 10MB limit
+const uploadDocument = multer({ storage, fileFilter, limits: { fileSize: 50 * 1024 * 1024 } }); // 50MB limit
 
 // POST /api/contact — public (submit a message/join request with optional resume)
 router.post('/', uploadDocument.single('resume'), async (req, res) => {

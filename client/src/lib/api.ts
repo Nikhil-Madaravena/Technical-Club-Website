@@ -1,8 +1,24 @@
 // Centralized API client for the Technical Club backend
-let API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-if (!API_BASE.endsWith('/api')) {
-  API_BASE = API_BASE.endsWith('/') ? `${API_BASE}api` : `${API_BASE}/api`;
+// In production the client is served from the same origin as the API,
+// so we use a relative /api path. VITE_API_URL overrides for any custom setup.
+const _raw = import.meta.env.VITE_API_URL;
+let API_BASE: string;
+if (_raw) {
+  API_BASE = _raw.endsWith('/api') ? _raw : _raw.replace(/\/$/, '') + '/api';
+} else if (import.meta.env.PROD) {
+  // Production: served from same origin — use relative path
+  API_BASE = '/api';
+} else {
+  // Local dev fallback
+  API_BASE = 'http://localhost:5001/api';
 }
+
+/** Returns the base server origin (no trailing slash, no /api) for building upload URLs */
+export const getApiOrigin = (): string => {
+  if (_raw) return _raw.replace(/\/api\/?$/, '');
+  if (import.meta.env.PROD) return '';
+  return 'http://localhost:5001';
+};
 
 const getToken = () => localStorage.getItem('tc_admin_token');
 

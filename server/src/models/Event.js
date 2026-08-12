@@ -8,6 +8,7 @@ const eventSchema = new mongoose.Schema(
     date: { type: Date, required: true },
     endDate: { type: Date },
     location: { type: String, required: true },
+    sumshodhini: { type: Boolean, default: false },
     category: {
       type: String,
       enum: ['Hackathon', 'Workshop', 'Guest Lecture', 'Competition', 'Seminar', 'Other'],

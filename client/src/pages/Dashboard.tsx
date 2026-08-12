@@ -9,7 +9,7 @@ import {
   Clock, ClipboardList, XCircle, MoreHorizontal, Save
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
-import { api } from "@/lib/api";
+import { api, getApiOrigin } from "@/lib/api";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import tcLogo from "@/assets/tc-logo.png";
 
@@ -685,7 +685,7 @@ function TeamPanel() {
             {team.map(m => (
               <div key={m._id} className="flex items-center gap-4 rounded-xl border border-border bg-card p-4 transition-all hover:border-accent/30">
                 <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-secondary">
-                  {m.photo && <img src={m.photo.startsWith('http') ? m.photo : `${import.meta.env.VITE_API_URL.replace('/api', '')}/uploads/${m.photo}`} className="h-full w-full object-cover" />}
+                  {m.photo && <img src={m.photo.startsWith('http') ? m.photo : `${getApiOrigin()}/uploads/${m.photo}`} className="h-full w-full object-cover" />}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-display text-xs font-bold tracking-wide truncate">{m.name}</p>
@@ -783,7 +783,7 @@ function ApplicationCard({ app, onUpdate, onDelete }: { app: any, onUpdate: () =
             <div className="flex gap-2">
               {app.resumeUrl && (
                 <a 
-                  href={app.resumeUrl.startsWith('http') ? app.resumeUrl : `${import.meta.env.VITE_API_URL.replace('/api', '')}${app.resumeUrl}`} 
+                  href={app.resumeUrl.startsWith('http') ? app.resumeUrl : `${getApiOrigin()}${app.resumeUrl}`} 
                   target="_blank" rel="noreferrer"
                   className="flex items-center gap-2 rounded-xl bg-accent px-4 py-2 font-display text-[9px] font-black tracking-widest text-background hover:scale-105 transition-all uppercase shadow-lg shadow-accent/20"
                 >
@@ -1014,7 +1014,7 @@ function DocumentsPanel() {
             
             <div className="mt-6 flex items-center justify-between border-t border-border pt-4">
               <a 
-                href={doc.url.startsWith('http') ? doc.url : `${import.meta.env.VITE_API_URL.replace('/api', '')}${doc.url}`} 
+                href={doc.url.startsWith('http') ? doc.url : `${getApiOrigin()}${doc.url}`} 
                 target="_blank" rel="noreferrer"
                 className="flex items-center gap-1.5 font-display text-[9px] font-bold tracking-widest text-accent hover:underline uppercase"
               >

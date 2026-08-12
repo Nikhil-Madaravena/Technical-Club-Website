@@ -61,7 +61,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-display text-sm font-bold tracking-widest uppercase">Email Us</h3>
-                    <p className="text-muted-foreground mt-1">technicalclub@kitsw.ac.in</p>
+                    <a href="mailto:tc.sac@kitsw.ac.in" className="text-muted-foreground mt-1 hover:text-foreground transition-colors block">tc.sac@kitsw.ac.in</a>
                   </div>
                 </div>
 
@@ -71,7 +71,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-display text-sm font-bold tracking-widest uppercase">Location</h3>
-                    <p className="text-muted-foreground mt-1">KITSW Campus, Warangal, Telangana</p>
+                    <p className="text-muted-foreground mt-1">KITSW, Hasanparthy, Warangal — 506015, Telangana</p>
                   </div>
                 </div>
 

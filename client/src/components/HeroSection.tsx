@@ -97,7 +97,7 @@ const HeroSection = () => {
             <span className="relative z-10">EXPLORE</span>
           </a>
           <a
-            href="#events"
+            href="/events"
             className="group relative overflow-hidden rounded-lg border border-crimson/30 bg-crimson/10 px-8 py-3 font-display text-xs tracking-widest text-foreground transition-all hover:border-crimson/60 hover:glow-crimson"
           >
             <span className="relative z-10">UPCOMING EVENTS</span>

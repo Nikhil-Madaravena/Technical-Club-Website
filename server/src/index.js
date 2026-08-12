@@ -6,27 +6,30 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-const allowedOrigins = ['http://localhost:5173', 'http://localhost:8080', process.env.FRONTEND_URL].filter(Boolean);
+// Allowed origins: dev localhost + whatever FRONTEND_URL is set to in production
+const devOrigins = process.env.NODE_ENV === 'production'
+  ? []
+  : ['http://localhost:5173', 'http://localhost:8080'];
+const allowedOrigins = [...devOrigins, process.env.FRONTEND_URL].filter(Boolean);
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl)
+    // Allow requests with no origin (curl, mobile apps, SSR)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+    // In dev allow all; in prod restrict to FRONTEND_URL
+    if (process.env.NODE_ENV !== 'production' || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      // In production, if it doesn't match exactly, we still might want to log it
-      console.log('Origin not allowed by CORS:', origin);
-      callback(null, true); // Temporarily allow all to fix the blocker
+      console.warn('[CORS] Blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
 }));
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // ── Try to connect to MongoDB ─────────────────────────────────────────────────
