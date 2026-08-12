@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Shield, ChevronRight } from "lucide-react";
+import { Menu, X, ChevronRight } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import tcLogo from "@/assets/tc-logo.png";
 
@@ -82,14 +82,6 @@ const Navbar = () => {
             )
           )}
 
-          <div className="mx-2 h-5 w-px bg-border" />
-
-          <Link
-            to="/admin"
-            className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 font-display text-[10px] tracking-widest text-muted-foreground transition-all hover:border-accent/40 hover:bg-accent/8 hover:text-accent"
-          >
-            <Shield className="h-3 w-3" /> ADMIN
-          </Link>
         </div>
 
         {/* Mobile toggle */}
@@ -145,15 +137,6 @@ const Navbar = () => {
                   </Link>
                 )
               )}
-              <div className="mt-2 border-t border-border pt-2">
-                <Link
-                  to="/admin"
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-2 rounded-xl px-4 py-3 font-display text-sm tracking-widest text-accent transition-all hover:bg-accent/8"
-                >
-                  <Shield className="h-4 w-4" /> ADMIN PANEL
-                </Link>
-              </div>
             </div>
           </motion.div>
         )}
