@@ -5,6 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 import tcLogo from "@/assets/tc-logo.png";
 
 const NAV_LINKS = [
+  { label: "Home",    href: "/" },
   { label: "Events",  href: "/events" },
   { label: "Gallery", href: "/gallery" },
   { label: "Join Us", href: "/join" },

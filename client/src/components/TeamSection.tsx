@@ -12,9 +12,10 @@ const FALLBACK_TEAM_2024 = [
 ];
 
 const TeamSection = () => {
+  const currentYear = new Date().getFullYear();
   const [team, setTeam] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedYear, setSelectedYear] = useState(2024);
+  const [selectedYear, setSelectedYear] = useState(currentYear);
 
   useEffect(() => {
     setLoading(true);
@@ -59,7 +60,7 @@ const TeamSection = () => {
           
           {/* Year Selector */}
           <div className="mt-8 flex flex-wrap justify-center gap-2.5">
-            {[2026, 2025, 2024, 2023].map((year) => (
+            {[currentYear, currentYear - 1, currentYear - 2, currentYear - 3].map((year) => (
               <button
                 key={year}
                 onClick={() => setSelectedYear(year)}
